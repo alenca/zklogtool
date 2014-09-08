@@ -1,0 +1,22 @@
+corruptedLog.46.1
+
+Transaction delimiter byte B replaced with 0
+
+corruptedLog.46.2
+
+Byte changed in transaction body
+
+corruptedLog.46.3
+
+Transaction delimiter byte wrong
+
+corruptedLog.46.4
+
+LEN field wrong
+
+corruptedLog.46.5
+
+EOF before transaction end 
+
+
+

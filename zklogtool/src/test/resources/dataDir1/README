@@ -1,0 +1,11 @@
+10/05/14 17:17:36 ./znodegenerator.sh  mydroplet:2181 create /node 0 50
+10/05/14 17:18:01 ./znodegenerator.sh  mydroplet:2181 create /node 51 200
+10/05/14 17:18:46 ./znodegenerator.sh  mydroplet:2181 delete /node 25 70
+
+tickTime=2000
+dataDir=/home/zookeeper/datadir
+clientPort=2181
+preAllocSize=5000
+snapCount=75
+
+
