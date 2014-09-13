@@ -26,7 +26,7 @@ Build takes several minutes to complete.
 
 ##How to use
 
-There are bash and power shell scripts for running both console application and web application.  Web application can be deployed to any servlet container. Build process downloads jetty and jetty-runner so you can try it out without any setup. This examples will show you how to monitor transactions in real time and how to reconstruct  data tree after particular transaction. 
+There are bash and windows batch scripts for running both console application and web application.  Web application can be deployed to any servlet container. Build process downloads jetty and jetty-runner so you can try it out without any setup. This examples will show you how to monitor transactions in real time and how to reconstruct  data tree after particular transaction. 
 
 ###Console application
 
