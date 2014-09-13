@@ -12,10 +12,6 @@ Possible use cases are:
 - Integration in test environment
 - Integration in system
 
-Continous integration status:
-
-![alt text](https://travis-ci.org/alenca/zklogtool.svg?branch=master "Continous integration")
-
 
 ##Build and test
 
