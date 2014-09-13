@@ -150,25 +150,32 @@ public class transactionlogexample {
         }
         
         //this is more powerfull way
-        TransactionIterator i = transactionLog.iterator();
+        TransactionIterator i = transactionLog.iterator();        
+        boolean exitLoop = false;
         
-        while(i.nextTransactionState()!=TransactionState.EMPTY){
+        do{
         
             switch(i.nextTransactionState()){
                 
                 case OK:
-                    System.out.println("Zxid: "+i.next().getTxnHeader().getZxid());
+                    System.out.println("Transaction is entirely written, zxid: "+i.next().getTxnHeader().getZxid());
                     break;
                 case INCOMPLETE:
                     System.out.println("Transaction is not entirely written");
+                    exitLoop=true;
                     break;
                 case CORRUPTION:
                     System.out.println("Transaction log is corrupted");
+                    exitLoop=true;
+                    break;
+                case EMPTY:
+                    System.out.println("Transaction not written");
+                    exitLoop=true;
                     break;
             
             }
         
-        }
+        } while(!exitLoop);
         
         //monitoring transaction log is simple
         TransactionMonitor monitor = new TransactionMonitor(transactionLog);
@@ -192,8 +199,9 @@ public class transactionlogexample {
         
         });
         
+        //starts monitoring thread
         monitor.startAtFirstTransaction();
-
+        
     }
     
 }
@@ -244,7 +252,6 @@ public class datatreeexample {
     }
 
 }
-
 ```
 
 
