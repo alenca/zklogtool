@@ -1,9 +1,9 @@
 zklogtool
 =========
 
-Zklogtool is a ZooKeeper transactions and data tree monitoring tool. It works by analyzing transaction logs in real time. It can reconstruct ZooKeepers data tree at any particular point in time. That works by loading data tree from snapshot file and applying transactions to it.
+Zklogtool is a ZooKeeper transactions and data tree monitoring tool. It works by analyzing transaction logs in real time. It can reconstruct ZooKeeper data tree at any particular point in time. That works by loading data tree from snapshot file and applying transactions to it.
 
-Zklogtool project consists of zklogtool library, console application and web application. 
+Zklogtool project consists of zklogtool library, console application and web application.
 
 Possible use cases are:
 - Learning ZooKeeper
@@ -13,7 +13,7 @@ Possible use cases are:
 - Integration in system
 
 
-##Build and test
+## Build and test
 
 Zklogtool is multi-module maven project. To build and run tests navigate to projects root folder and execute:
 
@@ -24,11 +24,11 @@ mvn verify
 Build takes several minutes to complete.
 
 
-##How to use
+## How to use
 
-There are bash and windows batch scripts for running both console application and web application.  Web application can be deployed to any servlet container. Build process downloads jetty and jetty-runner so you can try it out without any setup. This examples will show you how to monitor transactions in real time and how to reconstruct  data tree after particular transaction. 
+There are bash and windows scripts for running both console application and web application. Web application can be deployed to any servlet container. Build process downloads jetty and jetty-runner so you can try it out without any setup. These examples will show you how to monitor transactions in real time and how to reconstruct data tree after particular transaction.
 
-###Console application
+### Console application
 
 Go to zklogtool/target directory and execute:
 
@@ -97,7 +97,7 @@ Usage: zklogtool [options] [command] [command options]
 
 ```
 
-###Web application
+### Web application
 
 To start web app with jetty server go to zklogtoolwebapp/target and execute:
 
@@ -111,16 +111,16 @@ To display transaction log go to File -> Open transaction log and fill the form 
 
 ![alt text](http://i.imgur.com/Jk134KU.png "Transaction log example")
 
-To reconstruct data tree after particular transaction click on transaction and than click on Reconstruct Data Tree button. 
+To reconstruct data tree after particular transaction click on transaction and than click on Reconstruct Data Tree button.
 
 ![alt text](http://i.imgur.com/tWJlv7f.png "Snapshot example")
 
 For real time monitoring use `--follow` flag in console application or check Follow check-box in web application.
 
 
-##API
+## API
 
-API is simple and well documented. Please refer to javadoc for details, this is just a quick overview.  To generate javadoc run following command in projects root folder:
+API is simple and well documented. Please refer to javadoc for details, this is just a quick overview. To generate javadoc run following command in projects root folder:
 ```
 mvn javadoc:javadoc
 ```
@@ -133,30 +133,30 @@ import com.zklogtool.reader.*;
 import java.io.File;
 
 
-public class transactionlogexample {
+public class TransactionLogExample {
 
     public static void main(String[] args) {
-        
+
         TransactionLogReaderFactory factory = new TransactionLogReaderFactory();
         TransactionLogFileList logs = new DataDirTransactionLogFileList(new File("/tmp/zookeeper/version-2/"));
-        
+
         TransactionLog transactionLog = new TransactionLog(logs,factory);
-        
+
         //this is simple way
         for (Transaction t:transactionLog){
-        
+
             System.out.println("Zxid: "+t.getTxnHeader().getZxid());
-        
+
         }
-        
-        //this is more powerfull way
-        TransactionIterator i = transactionLog.iterator();        
+
+        //this is powerful way
+        TransactionIterator i = transactionLog.iterator();
         boolean exitLoop = false;
-        
+
         do{
-        
+
             switch(i.nextTransactionState()){
-                
+
                 case OK:
                     System.out.println("Transaction is entirely written, zxid: "+i.next().getTxnHeader().getZxid());
                     break;
@@ -172,14 +172,14 @@ public class transactionlogexample {
                     System.out.println("Transaction not written");
                     exitLoop=true;
                     break;
-            
+
             }
-        
+
         } while(!exitLoop);
-        
+
         //monitoring transaction log is simple
         TransactionMonitor monitor = new TransactionMonitor(transactionLog);
-        
+
         monitor.addListener(new TransactionListener(){
 
             @Override
@@ -196,14 +196,14 @@ public class transactionlogexample {
             public void onCorruption() {
                 System.out.println("Transaction log is corrupted");
             }
-        
+
         });
-        
+
         //starts monitoring thread
         monitor.startAtFirstTransaction();
-        
+
     }
-    
+
 }
 ```
 
@@ -217,47 +217,47 @@ import java.io.IOException;
 import java.util.Date;
 
 
-public class datatreeexample {
-    
+public class DataTreeExample {
+
 
     public static void main(String[] args) throws IOException, Exception {
-        
+
         File snapFile = new File("/tmp/zookeeper/version-2/snapshot.3");
         SnapshotFileReader snapReader = new SnapshotFileReader(snapFile,3);
-        
+
         //DataState holds entire ZooKeeper data tree and sessions
         DataState dataState;
-        
+
         //read fuzzy snapshot
         dataState = snapReader.readFuzzySnapshot();
-        
+
         //reconstruct data tree to ensure it is not fuzzy
         //refer to documentation for more details
-        
+
         TransactionLogReaderFactory factory = new TransactionLogReaderFactory();
-        TransactionLogFileList logs = new DataDirTransactionLogFileList(new File("/tmp/zookeeper/version-2/"));   
+        TransactionLogFileList logs = new DataDirTransactionLogFileList(new File("/tmp/zookeeper/version-2/"));
         TransactionLog transactionLog = new TransactionLog(logs,factory);
         dataState = snapReader.restoreDataState(transactionLog.iterator());
-        
+
         //now you can iterate data tree
         for (String s : dataState.getChildren("/")){
-            
+
             System.out.println("Node "+s+" created at "+ new Date(dataState.getNode("/"+s).stat.getCtime()));
-            
+
         }
-        
+
         //applying transactions is easy
         //dataState.processTransaction(Tranasction t);
-        
+
     }
 
 }
 ```
 
 
-##Licence
+## Licence
 Zklogtool is licenced under Apache Software Licence 2.0.
- 
+
 
 
 
